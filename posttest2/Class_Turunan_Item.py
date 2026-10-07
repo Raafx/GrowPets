@@ -9,10 +9,10 @@ class Food(Item):
     
     def tampilkan_info_item(self):
         print("============ Info Item =============")
-        print(f"ID Item                : {self.__item_id}")
+        print(f"ID Item                : {self.item_id}")
         print(f"Nama Item              : {self.name}")
-        print(f"Harga                  : {self.__price}")
-        print(f"Kategori               : {self.__category}")
+        print(f"Harga                  : {self.price}")
+        print(f"Kategori               : {self.category}")
         print(f"Efek Pengurangan Lapar : {self.pengurangan_lapar}")
         print(f"Efek Penambahan Energi : {self.penambahan_energi}")
         print(f"Efek Peningkatan Mood  : {self.peningkatan_mood}")
@@ -26,10 +26,10 @@ class Drink(Item):
 
     def tampilkan_info_item(self):
         print("============ Info Item =============")
-        print(f"ID Item                : {self.__item_id}")
+        print(f"ID Item                : {self.item_id}")
         print(f"Nama Item              : {self.name}")
-        print(f"Harga                  : {self.__price}")
-        print(f"Kategori               : {self.__category}")
+        print(f"Harga                  : {self.price}")
+        print(f"Kategori               : {self.category}")
         print(f"Efek Pengurangan Haus  : {self.pengurangan_haus}")
         print("====================================")
         
@@ -42,10 +42,10 @@ class Medicine(Item):
 
     def tampilkan_info_item(self):
         print("============ Info Item =============")
-        print(f"ID Item                : {self.__item_id}")
+        print(f"ID Item                : {self.item_id}")
         print(f"Nama Item              : {self.name}")
-        print(f"Harga                  : {self.__price}")
-        print(f"Kategori               : {self.__category}")
+        print(f"Harga                  : {self.price}")
+        print(f"Kategori               : {self.category}")
         print(f"Efek Penambahan Energi : {self.penambahan_energi}")
         print(f"Efek Peningkatan Mood  : {self.peningkatan_mood}")
         print(f"Target Penyakit        : {self.target_id_penyakit}")

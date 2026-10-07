@@ -1,145 +1,107 @@
-
-
-from Class_Utama import Player,Pet,Item
+from Class_Utama import Disease, Player,Pet,Item, Shop
+from Class_Turunan_Item import Drink, Food
 
 
 if __name__ == "__main__":
 
-    print("\n========== PEMBUATAN OBJECT ==========")
-
-    player1 = Player("P001", "Rafi", "password123")
-    player2 = Player("P002", "Ahmad", "rahasia123")
-
-   
-    pet1 = Pet(
-        "PET001",
-        "Milo",
-        "Kucing",
-        "Aktif",
-        80,
-        100,
-        120
-    )
-
-    pet2 = Pet(
-        "PET002",
-        "Bobby",
-        "Anjing",
-        "Pemalas",
-        80,
-        120,
-        80
-    )
-
-   
-    item1 = Item(
-        "I001",
-        "Makanan Kucing",
-        5000,
-        "food"
-    )
-
-    item2 = Item(
-        "I002",
-        "Susu",
-        7000,
-        "drink"
-    )
-
-    print("\n========== INSTANCE METHOD ==========")
-
-   
-    player1.list_of_pet = pet1
-    player1.list_of_pet = pet2
-
+    player = Player("P001","Raafx","r1234")
     
-    player1.tampilkan_data_user()
-    pet1.tampilkan_data_pet()
-
+    print(player.tampilkan_data_user())
     
-    item1.tampilkan_info_item()
-    item2.tampilkan_info_item()
-
-   
-    pet1.bermain()
-
-
-    print("\n========== CLASS METHOD ==========")
-
+    # Agregasi: Buat pet baru dan masukin ke list_of_pet milik player
+    player.buat_pet("C001","Oyen","Cat","Active",100,100,100, ["Ikan", "Ayam", "Whiskas"])
+    player.buat_pet("D001","Oggy","Dog","Lazy",120,100,80, ["Daging", "Sosis", "Pedigree"])
+    player.buat_pet("P001","Pooh","Panda","Lazy",150,120,100, ["Bamboo", "Buah", "Sayuran"])
     
-    data_pet = {
-        "pet_id": "PET003",
-        "pet_name": "Akai",
-        "spesies": "Panda",
-        "personality": "Ceria",
-        "max_kekenyangan": 80,
-        "max_haus": 80,
-        "max_energi": 100
-    }
-
-    pet3 = Pet.from_dict(data_pet)
-    pet3.tampilkan_data_pet()
-
+    print(player.tampilkan_data_user())
     
-    print("\nTarget EXP sebelum diubah:", Pet.TARGET_EXP)
-    Pet.set_target_exp(150)
-    print("Target EXP setelah diubah:", Pet.TARGET_EXP)
+    # akses class yang diturunkan dari class utama
+    oyen = player.list_of_pet[0]
+    oggy = player.list_of_pet[1]
+    pooh = player.list_of_pet[2]
     
-    print("\n========== STATIC METHOD ==========")
-
-    print(
-        "Username 'Rafi' valid:",
-        Player.validasi_username("Rafi")
-    )
-
-    print(
-        "Username kosong valid:",
-        Player.validasi_username("")
-    )
-
-    print(
-        "Nama pet 'Milo' valid:",
-        Pet.validasi_nama_pet("Milo")
-    )
-
-    print(
-        "Nama pet kosong valid:",
-        Pet.validasi_nama_pet("")
-    )
-
-
+    # tampilkan data pet
+    print(oyen.tampilkan_data_pet())
+    print(oggy.tampilkan_data_pet())
+    print(pooh.tampilkan_data_pet())
     
-    print("\n========== SETTER VALID ==========")
+    # spesial method dari masing-masing class turunan pet
+    oyen.kebersihan = 50
+    pooh.ketenangan = 50
+    oyen.grooming()
+    oggy.jalan_jalan()
+    pooh.meditasi()
+    
+    
+    # buat objek item makanan
+    ikan = Food("F001","Ikan",10000,"food",20,15,10)
+    ayam = Food("F002","Ayam",15000,"food",20,10,10)
+    daging = Food("F003","Daging",20000,"food",25,10,5)
+    bamboo = Food("F004","Bamboo",12000,"food",10,5,10)
+    
+    # buat objek item minuman
+    air = Drink("D001","Air",5000,"drink",20)
+    susu = Drink("D002","Susu",10000,"drink",25)
+    jus = Drink("D003","Jus",15000,"drink",30)
+    
+    # Asosiasi: item sebagai parameter ke shop
+    # Agregasi: buat objek shop dan masukin item ke list_of_item milik shop 
+    shop = Shop()
+    shop.tambah_item_ke_shop(ikan)
+    shop.tambah_item_ke_shop(ayam)
+    shop.tambah_item_ke_shop(daging)
+    shop.tambah_item_ke_shop(bamboo)
+    shop.tambah_item_ke_shop(air)
+    shop.tambah_item_ke_shop(susu)
+    shop.tambah_item_ke_shop(jus)
+    
+    # atur pet coins ke 100000 biar bisa beli item
+    player.pet_coins = 100000
+    
+    # Asosiasi: beli item dari shop, menggunakan objek player dan itemsebagai parameter
+    shop.beli_item(player, ikan, 2)
+    shop.beli_item(player, ayam, 1)
+    shop.beli_item(player, daging, 3)
 
-    player1.pet_coins = 100
-    print("Pet coins:", player1.pet_coins)
-
-    pet1.energi = 80
-    print("Energi:", pet1.energi)
-
-    pet1.mood = 90
-    print("Mood:", pet1.mood)
-
-    item1.price = 6000
-    print("Harga item:", item1.price)
-
-    item1.category = "medicine"
-    print("Kategori item:", item1.category)
-
-
-    print("\n========== SETTER INVALID ==========")
-
-    player1.user_id = ""
-    player1.password = ""
-
-    player1.pet_coins = -100
-
-    pet1.energi = -10
-    pet1.energi = 150
-
-    pet1.mood = -10
-    pet1.mood = 150
-
-    item1.item_id = ""
-    item1.price = -5000
-    item1.category = "senjata"
+    # atur kekenyangan pet ke 50 biar bisa makan
+    oyen.kekenyangan = 50
+    oggy.kekenyangan = 50
+    pooh.kekenyangan = 50
+    
+    # makan
+    oyen.makan(ikan)
+    oggy.makan(daging)
+    pooh.makan(bamboo)
+    
+    # Asosiasi: beli item dari shop, menggunakan objek player dan itemsebagai parameter
+    # Komposisi: setelah beli item, akan mendapatkan detail tranksaksi yang merupakan objek dari class Transaksi, namun objeknya dibuat hanya ketika beli item, dan tidak disimpan di list_of_transaksi milik shop
+    shop.beli_item(player, air, 2)
+    shop.beli_item(player, susu, 1)
+    shop.beli_item(player, jus, 1)
+    
+    # atur haus pet ke 50 biar bisa minum
+    oyen.haus = 50
+    oggy.haus = 50
+    pooh.haus = 50
+    
+    # minum
+    oyen.minum(air)
+    oggy.minum(susu)
+    pooh.minum(jus)
+    
+    # tampilkan info item (overriding method)
+    ikan.tampilkan_info_item()
+    ayam.tampilkan_info_item()
+    daging.tampilkan_info_item()
+    bamboo.tampilkan_info_item()
+    air.tampilkan_info_item()
+    susu.tampilkan_info_item()
+    jus.tampilkan_info_item()
+    
+    # bikin objek penyakit (untuk sekarang objek ini belum kepake buat apa apa)
+    penyakit1 = Disease("P001", "Flu", "Penyakit yang menyebabkan demam dan batuk")
+    penyakit2 = Disease("P002", "Diare", "Penyakit yang menyebabkan BAB cair")
+    
+    penyakit1.tampilkan_info_penyakit()
+    penyakit2.tampilkan_info_penyakit()
+    

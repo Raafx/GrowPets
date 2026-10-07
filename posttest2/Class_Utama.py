@@ -6,7 +6,7 @@ class Player:
         self.username = username
         self.__password = password
         self.__list_of_pet = []
-        self.__pet_coins = 0
+        self.__pet_coins = 100
         self.__inventory = {"food":[],
                             "drink":[],
                             "medicine":[]}
@@ -73,9 +73,13 @@ class Player:
         print("============ Data User =============")
         print(f"Username    : {self.username}")
         print(f"Jumlah Koin : {self.__pet_coins}")
-        print("Daftar Pet   :")
+        print(f"Daftar Pet  :")
         for pet in self.__list_of_pet:
             print(f"- {pet.pet_name} ({pet.spesies})")
+        print(f"Daftar Item :")
+        for item_type, items in self.inventory.items():
+            for item in items:
+                print(f"- {item_type}: {item.item_name}")
         print("====================================")
         
     @staticmethod
@@ -102,6 +106,47 @@ class Player:
         else:
             print("Objek bukan item!")
             
+    
+            
+    def tambah_pet(self, pet):
+        from Class_Turunan_Pet import Cat,Dog,Panda
+        
+        if isinstance(pet,Pet):
+            if isinstance(pet, Cat):
+                self.__list_of_pet.append(pet)
+                
+            elif isinstance(pet, Dog):
+                self.__list_of_pet.append(pet)
+                
+            elif isinstance(pet, Panda):
+                self.__list_of_pet.append(pet)
+                
+            else:
+                print("Pet tidak dikenali!")
+        else:
+            print("Objek bukan pet!")
+            
+    def buat_pet(self, pet_id, pet_name, spesies, personality, max_kekenyangan, max_haus, max_energi, list_makanan):
+        from Class_Turunan_Pet import Cat, Dog, Panda
+        
+        if spesies.lower() == "cat":
+            new_pet = Cat(pet_id, pet_name, spesies, personality, max_kekenyangan, max_haus, max_energi, list_makanan)
+            self.tambah_pet(new_pet)
+            print(f"Pet baru {pet_name} (Kucing) berhasil dibuat!")
+            
+        elif spesies.lower() == "dog":
+            new_pet = Dog(pet_id, pet_name, spesies, personality, max_kekenyangan, max_haus, max_energi, list_makanan)
+            self.tambah_pet(new_pet)
+            print(f"Pet baru {pet_name} (Anjing) berhasil dibuat!")
+            
+        elif spesies.lower() == "panda":
+            new_pet = Panda(pet_id, pet_name, spesies, personality, max_kekenyangan, max_haus, max_energi, list_makanan)
+            self.tambah_pet(new_pet)
+            print(f"Pet baru {pet_name} (Panda) berhasil dibuat!")
+            
+        else:
+            print("Spesies tidak valid! Pilih antara 'Cat', 'Dog', atau 'Panda'.")
+            
             
    
 
@@ -117,21 +162,21 @@ class Pet:
         self.pet_name = pet_name
         self.spesies = spesies
         self.personality = personality
-        self.__kekenyangan = max_kekenyangan  
-        self.__haus = max_haus 
-        self.__energi = max_energi 
-        self.__max_kekenyangan = max_kekenyangan  
-        self.__max_haus = max_haus 
-        self.__max_energi = max_energi 
-        self.__max_mood = Pet.DEFAULT_MOOD
-        self.__mood = Pet.DEFAULT_MOOD
-        self.__exp = Pet.DEFAULT_EXP
-        self.__fase = Pet.DEFAULT_FASE
+        self._kekenyangan = max_kekenyangan  
+        self._haus = max_haus 
+        self._energi = max_energi 
+        self._max_kekenyangan = max_kekenyangan  
+        self._max_haus = max_haus 
+        self._max_energi = max_energi 
+        self._max_mood = Pet.DEFAULT_MOOD
+        self._mood = Pet.DEFAULT_MOOD
+        self._exp = Pet.DEFAULT_EXP
+        self._fase = Pet.DEFAULT_FASE
         self.penyakit = None 
         self.__total_makan = 0
         self.__total_minum = 0
-        self.__mengantuk = False 
-        self.__list_makanan = list_makanan #list makanan yang bisa dimakan oleh pet tersebut 
+        self._mengantuk = False 
+        self._list_makanan = list_makanan #list makanan yang bisa dimakan oleh pet tersebut 
         
     @classmethod 
     def from_dict(cls, data): 
@@ -141,7 +186,8 @@ class Pet:
                    data["personality"], 
                    data["max_kekenyangan"], 
                    data["max_haus"], 
-                   data["max_energi"] )
+                   data["max_energi"],
+                   data["list_makanan"] )
         
     @staticmethod
     def validasi_nama_pet(nama):
@@ -155,70 +201,70 @@ class Pet:
         
     @property
     def kekenyangan(self):
-        return self.__kekenyangan
+        return self._kekenyangan
     
     @kekenyangan.setter
     def kekenyangan(self, jumlah):
-        if jumlah < 0 or jumlah > self.__max_kekenyangan:
+        if jumlah < 0 or jumlah > self._max_kekenyangan:
             print("Jumlah kekenyangan tidak boleh negatif atau melebihi maksimum!")
         else:
-            self.__kekenyangan = jumlah
+            self._kekenyangan = jumlah
     
     @property
     def haus(self):
-        return self.__haus 
+        return self._haus 
     
     @haus.setter
     def haus(self, jumlah):
-        if jumlah < 0 or jumlah > self.__max_haus  :
+        if jumlah < 0 or jumlah > self._max_haus  :
             print("Jumlah haus tidak boleh negatif atau melebihi maksimum!")
         else:
-            self.__haus = jumlah
+            self._haus = jumlah
             
     @property
     def energi(self):
-        return self.__energi
+        return self._energi
     
     @energi.setter
     def energi(self, jumlah):
-        if jumlah < 0 or jumlah > self.__max_energi:
+        if jumlah < 0 or jumlah > self._max_energi:
             print("Jumlah energi tidak boleh negatif atau melebihi maksimum!")
         else:
-            self.__energi = jumlah
+            self._energi = jumlah
     
     @property
     def mood(self):
-        return self.__mood  
+        return self._mood  
     
     @mood.setter
     def mood(self, jumlah):
         if jumlah < 0 or jumlah > 100:
             print("Jumlah mood tidak boleh negatif atau melebihi maksimum!")
         else:
-            self.__mood = jumlah
+            self._mood = jumlah
     
     @property
     def exp(self):
-        return self.__exp
+        return self._exp
     
     @exp.setter
     def exp(self, jumlah):
         if jumlah < 0:
             print("Jumlah exp tidak boleh negatif!")
         else:
-            self.__exp = jumlah
+            self._exp = jumlah
             
     def tampilkan_data_pet(self):
         print("============ Data Pet =============")
         print(f"Nama Pet   : {self.pet_name}")
         print(f"Spesies    : {self.spesies}")
         print(f"Personality: {self.personality}")
-        print(f"Kekenyangan: {self.__kekenyangan}/{self.__max_kekenyangan}")
-        print(f"Haus       : {self.__haus}/{self.__max_haus}")
-        print(f"Energi     : {self.__energi}/{self.__max_energi}")
-        print(f"Mood       : {self.__mood}/100")
-        print(f"Exp        : {self.__exp}/{Pet.TARGET_EXP}")
-        print(f"Fase       : {self.__fase}")
+        print(f"Kekenyangan: {self._kekenyangan}/{self._max_kekenyangan}")
+        print(f"Haus       : {self._haus}/{self._max_haus}")
+        print(f"Energi     : {self._energi}/{self._max_energi}")
+        print(f"Mood       : {self._mood}/100")
+        print(f"Exp        : {self._exp}/{Pet.TARGET_EXP}")
+        print(f"Fase       : {self._fase}")
         if self.penyakit:
             print(f"Penyakit   : {self.penyakit}")
         else:
@@ -228,33 +274,35 @@ class Pet:
     def makan(self, food):
         from Class_Turunan_Item import Food
         
-        if(self.kekenyangan == self.__max_kekenyangan):
+        if(self.kekenyangan == self._max_kekenyangan):
             print(f"{self.pet_name} masih kenyang nih, ntar aja yak makannya (^_^)\n")
             return
         
         if isinstance(food, Food):
-            if food.name in self.__list_makanan:
+            if food.name in self._list_makanan:
                 
-                print("lagi makan...")
+                print(f"\n{self.pet_name} lagi makan...")
                 for i in range(35): 
-                    time.sleep(0.3)
+                    time.sleep(0.1)
                     print("=", end="",flush=True)
                     
-                self.__kekenyangan += food.pengurangan_lapar
-                if self.__kekenyangan == self.__max_kekenyangan:
-                    self.__kekenyangan = self.__max_kekenyangan
+                self._kekenyangan += food.pengurangan_lapar
+                if self._kekenyangan >= self._max_kekenyangan:
+                    self._kekenyangan = self._max_kekenyangan
                     
-                self.__energi += food.penambahan_energi
-                if self.__energi == self.__max_energi:
-                    self.__energi = self.__max_energi
+                self._energi += food.penambahan_energi
+                if self._energi >= self._max_energi:
+                    self._energi = self._max_energi
                     
-                self.__mood += food.peningkatan_mood
-                if self.__mood == self.__max_mood:
-                    self.__mood = self.__max_mood
+                self._mood += food.peningkatan_mood
+                if self._mood >= self._max_mood:
+                    self._mood = self._max_mood
                     
                 self.__total_makan += 1
                 
-                print(f"Yey {self.pet_name} udah selesai makan nih (˵>ᗜ<˵) !!")
+                print(f"\nYey {self.pet_name} udah selesai makan nih (˵>ᗜ<˵) !!\n")
+            else:
+                print(f"{self.pet_name} ga bisa makan {food.name} nih, coba kasih makanan lain aja (^_^)\n")
                 
         else:
             print("Ini bukan makanan oiii ヽ(#`Д´)ﾉ")
@@ -262,26 +310,25 @@ class Pet:
     def minum(self, drink):
         from Class_Turunan_Item import Drink
         
-        if(self.__haus == self.__max_haus):
+        if(self._haus == self._max_haus):
             print(f"{self.pet_name} masih belum haus nih, ntar aja yak minumnya (^_^)\n")
             return
         
         if isinstance(drink, Drink):
-            print("lagi makan...")
+            print(f"\n{self.pet_name} lagi minum...")
             for i in range(35): 
-                time.sleep(0.05)
+                time.sleep(0.03)
                 print("=", end="",flush=True)
                 
-            self.__haus += drink.pengurangan_haus
+            self._haus += drink.pengurangan_haus
             
             self.__total_minum += 1
             
-            print(f"Yey {self.pet_name} udah selesai makan nih (˵>ᗜ<˵) !!")
+            print(f"\nYey {self.pet_name} udah selesai minum nih (˵>ᗜ<˵) !!\n")
                 
         else:
-            print("Ini bukan makanan oiii ヽ(#`Д´)ﾉ")
+            print("Ini bukan minuman oiii ヽ(#`Д´)ﾉ")
                 
-        
         
 
 class Item:
@@ -335,7 +382,7 @@ class Item:
         
 
 class Disease:
-    def __init__(self, disease_id, name, deskripsi, severity):
+    def __init__(self, disease_id, name, deskripsi):
         self.__disease_id = disease_id
         self.name = name
         self.deskripsi = deskripsi
@@ -355,8 +402,7 @@ class Disease:
         print("============ Info Penyakit =============")
         print(f"ID Penyakit : {self.__disease_id}")
         print(f"Nama Penyakit: {self.name}")
-        print(f"Deskripsi   : {self.description}")
-        print(f"Severity    : {self.severity}")
+        print(f"Deskripsi   : {self.deskripsi}")
         print("========================================")
         
         
@@ -366,18 +412,18 @@ class Shop:
                             "drink":[],
                             "medicine":[]}
         
-    def beli_item(self, player, item):
+    def beli_item(self, player, item, jumlah):
         
         if not isinstance(item, Item):
             print("Yang kamu beli bukan item woii!\n")
             return
         
         if item in self.__daftar_item[item.category]:
-            
-            jumlah = int(input("Input jumlah item yang ingin dibeli: "))
             total_harga = jumlah*item.price
             
-            if player.pet_coins > total_harga:
+            
+            if player.pet_coins >= total_harga:
+                player.pet_coins -= total_harga
                 for i in range(jumlah):
                     player.tambah_item(item)
                     
@@ -386,7 +432,16 @@ class Shop:
                 transaksi.tampilkan_info_transaksi()
             
             else:
-                print("Pembelian gagal! Pet Coins kamu masih kurang (ㅠ﹏ㅠ)")        
+                print("Pembelian gagal! Pet Coins kamu masih kurang (ㅠ﹏ㅠ)")    
+                
+    def tambah_item_ke_shop(self, item):
+        if isinstance(item, Item):
+            if item.category in self.__daftar_item:
+                self.__daftar_item[item.category].append(item)
+            else:
+                print("Kategori item tidak valid.")
+        else:
+            print("Hanya objek Item yang dapat ditambahkan ke shop.")    
 
 # class bagian komposisi dari Shop                    
 class Transaksi:
