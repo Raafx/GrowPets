@@ -74,7 +74,7 @@ if __name__ == "__main__":
     pooh.makan(bamboo)
     
     # Asosiasi: beli item dari shop, menggunakan objek player dan itemsebagai parameter
-    # Komposisi: setelah beli item, akan mendapatkan detail tranksaksi yang merupakan objek dari class Transaksi, namun objeknya dibuat hanya ketika beli item, dan tidak disimpan di list_of_transaksi milik shop
+    # Komposisi: setelah beli item, akan mendapatkan detail tranksaksi yang merupakan objek dari class Transaksi, namun objeknya dibuat hanya ketika beli item, dan akan hilang ketika objek shop dihapus
     shop.beli_item(player, air, 2)
     shop.beli_item(player, susu, 1)
     shop.beli_item(player, jus, 1)
