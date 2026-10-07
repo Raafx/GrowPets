@@ -1,182 +1,287 @@
-# GrowPets — Dokumentasi Program OOP Python
+# GrowPets — Posttest 2
 
 ## 1. Deskripsi Program
 
-**GrowPets** adalah program simulasi sederhana berbasis CLI (Command Line Interface) yang menerapkan konsep **Object-Oriented Programming (OOP)** menggunakan Python.
+**GrowPets** adalah program simulasi hewan peliharaan berbasis **CLI (Command Line Interface)** yang dibuat menggunakan Python dan menerapkan konsep **Object-Oriented Programming (OOP)**.
 
-Program ini mensimulasikan pengguna yang memiliki hewan peliharaan (*pet*), item, koin, dan beberapa status pet seperti kekenyangan, haus, energi, mood, serta EXP.
+Pada versi **Posttest 2**, program dikembangkan dari versi sebelumnya dengan menambahkan:
 
-Program dibuat dengan tiga class utama:
+- inheritance / pewarisan class;
+- class turunan untuk berbagai jenis pet;
+- class turunan untuk berbagai jenis item;
+- method overriding;
+- validasi menggunakan `isinstance()`;
+- hubungan antar-object berupa **agregasi, asosiasi, dan komposisi**;
+- sistem Shop untuk membeli item;
+- object `Transaksi` yang dibuat saat proses pembelian.
 
-- `Player` — merepresentasikan pengguna/pemain.
-- `Pet` — merepresentasikan hewan peliharaan.
-- `Item` — merepresentasikan item yang dapat dimiliki pemain.
+Pet memiliki beberapa status seperti:
 
-Program dibagi menjadi dua bagian:
+- kekenyangan;
+- haus;
+- energi;
+- mood;
+- EXP;
+- fase;
+- penyakit.
 
-- `Class_Utama.py` → berisi definisi class `Player`, `Pet`, dan `Item`.
-- File utama/testing → melakukan pembuatan object dan pengujian berbagai fitur OOP.
+Jenis pet yang tersedia:
+
+- `Cat`
+- `Dog`
+- `Panda`
+
+Jenis item yang tersedia:
+
+- `Food`
+- `Drink`
+- `Medicine`
 
 ---
 
-## 2. Struktur Program
+# 2. Struktur Folder
 
-Struktur sederhananya:
+Struktur folder `posttest2`:
 
 ```text
-GrowPets/
+posttest2/
 ├── Class_Utama.py
-└── Main.py
+├── Class_Turunan_Pet.py
+├── Class_Turunan_Item.py
+└── main.py
 ```
 
-> Nama file utama dapat disesuaikan dengan nama file yang digunakan. Pada kode pengujian, class diimpor menggunakan:
->
-> `from Class_Utama import Player, Pet, Item`
+### `Class_Utama.py`
+
+Berisi class utama:
+
+- `Player`
+- `Pet`
+- `Item`
+- `Disease`
+- `Shop`
+- `Transaksi`
+
+### `Class_Turunan_Pet.py`
+
+Berisi class turunan dari `Pet`:
+
+- `Cat`
+- `Dog`
+- `Panda`
+
+### `Class_Turunan_Item.py`
+
+Berisi class turunan dari `Item`:
+
+- `Food`
+- `Drink`
+- `Medicine`
+
+### `main.py`
+
+Digunakan untuk membuat object dan menjalankan pengujian program.
 
 ---
 
-# 3. Penjelasan Class
+# 3. Struktur Pewarisan Class
 
-## 3.1 Class `Player`
+Struktur inheritance pada program:
 
-Class `Player` digunakan untuk menyimpan data pemain.
+```text
+                 Pet
+              /   |   \
+            Cat  Dog  Panda
 
-### Atribut instance
+
+                 Item
+               /  |  \
+            Food Drink Medicine
+```
+
+`Cat`, `Dog`, dan `Panda` mewarisi atribut dan method dari `Pet`.
+
+Sedangkan `Food`, `Drink`, dan `Medicine` mewarisi atribut dan method dari `Item`.
+
+Contoh:
+
+```python
+class Cat(Pet):
+    ...
+```
+
+dan:
+
+```python
+class Food(Item):
+    ...
+```
+
+Constructor class turunan memanggil constructor parent menggunakan:
+
+```python
+super().__init__(...)
+```
+
+---
+
+# 4. Class `Player`
+
+`Player` merepresentasikan pengguna yang memainkan game.
+
+## Atribut
 
 | Atribut | Keterangan |
 |---|---|
-| `__user_id` | ID unik pemain |
+| `__user_id` | ID user |
 | `username` | Nama pengguna |
 | `__password` | Password pengguna |
 | `__list_of_pet` | Daftar pet yang dimiliki |
-| `__pet_coins` | Jumlah koin pemain |
-| `__inventory` | Inventory yang terdiri dari food, drink, dan medicine |
+| `__pet_coins` | Jumlah Pet Coins |
+| `__inventory` | Inventory berdasarkan kategori item |
 
-Atribut yang diawali `__` merupakan **private attribute**, sehingga aksesnya dilakukan melalui method/property yang disediakan.
-
-### Property dan Setter
-
-#### `user_id`
-Digunakan untuk mengambil dan mengubah ID pemain.
-
-Setter menolak ID berupa string kosong.
-
-#### `password`
-Digunakan untuk mengambil dan mengubah password.
-
-Setter menolak password kosong.
-
-#### `pet_coins`
-Digunakan untuk mengambil dan mengubah jumlah koin.
-
-Setter menolak jumlah koin negatif.
-
-#### `list_of_pet`
-Digunakan untuk menambahkan object `Pet` ke daftar pet pemain.
-
-Setter melakukan validasi menggunakan:
+Inventory terdiri dari:
 
 ```python
-isinstance(pet, Pet)
+{
+    "food": [],
+    "drink": [],
+    "medicine": []
+}
 ```
 
-Dengan demikian, hanya object dari class `Pet` yang dapat dimasukkan.
+## Method
 
-#### `inventory`
-Digunakan untuk menambahkan object `Item` ke inventory.
+### `tampilkan_data_user()`
 
-Item akan dimasukkan berdasarkan kategorinya:
+Menampilkan informasi user, Pet Coins, pet yang dimiliki, dan item dalam inventory.
 
-- `food`
-- `drink`
-- `medicine`
+### `validasi_username(nama)`
 
-Setter juga memvalidasi agar hanya object `Item` yang dapat dimasukkan.
+Merupakan **static method** yang digunakan untuk memvalidasi apakah username kosong.
 
-### Instance Method
+Contoh:
 
-#### `tampilkan_data_user()`
+```python
+Player.validasi_username("Raafx")
+```
 
-Menampilkan informasi pemain, jumlah koin, dan daftar pet yang dimiliki.
+### `tambah_item(item)`
 
-### Static Method
+Menambahkan object item ke inventory berdasarkan tipe item:
 
-#### `validasi_username(nama)`
+- `Food` → `food`
+- `Drink` → `drink`
+- `Medicine` → `medicine`
 
-Digunakan untuk mengecek apakah username kosong atau tidak.
+Method menggunakan `isinstance()` untuk menentukan tipe object.
 
-Method ini menggunakan `@staticmethod` karena tidak membutuhkan data dari object `Player`.
+### `tambah_pet(pet)`
+
+Menambahkan object pet ke daftar pet berdasarkan jenis pet:
+
+- `Cat`
+- `Dog`
+- `Panda`
+
+### `buat_pet(...)`
+
+Membuat object pet secara langsung di dalam method `Player`.
+
+Spesies menentukan class yang dibuat:
+
+```text
+cat   → Cat
+dog   → Dog
+panda → Panda
+```
+
+Setelah object dibuat, object tersebut dimasukkan ke daftar pet menggunakan `tambah_pet()`.
+
+Contoh:
+
+```python
+player.buat_pet(
+    "C001",
+    "Oyen",
+    "Cat",
+    "Active",
+    100,
+    100,
+    100,
+    ["Ikan", "Ayam", "Whiskas"]
+)
+```
 
 ---
 
-# 4. Class `Pet`
+# 5. Class `Pet`
 
-Class `Pet` digunakan untuk merepresentasikan hewan peliharaan dalam game.
+`Pet` merupakan class dasar untuk semua jenis hewan peliharaan.
 
 ## Class Attribute
 
-Class `Pet` memiliki beberapa atribut yang digunakan bersama oleh seluruh object:
+```python
+DEFAULT_MOOD = 100
+DEFAULT_EXP = 0
+DEFAULT_FASE = 1
+TARGET_EXP = 100
+NAMA_GAME = "GrowPets"
+```
 
-| Class Attribute | Nilai Awal | Keterangan |
-|---|---:|---|
-| `DEFAULT_MOOD` | `100` | Mood awal pet |
-| `DEFAULT_EXP` | `0` | EXP awal pet |
-| `DEFAULT_FASE` | `1` | Fase awal pet |
-| `TARGET_EXP` | `100` | Target EXP |
-| `NAMA_GAME` | `"GrowPets"` | Nama game |
+Class attribute digunakan sebagai nilai yang dapat digunakan bersama oleh object dalam class tersebut.
 
-Karena merupakan **class attribute**, nilainya berada pada level class dan dapat diakses menggunakan `Pet.NAMA_GAME`, `Pet.TARGET_EXP`, dan sebagainya.
+## Atribut Instance
 
-## Atribut instance
+Beberapa atribut yang dimiliki setiap pet:
 
-Setiap object `Pet` memiliki data masing-masing, seperti:
-
-- `__pet_id`
-- `pet_name`
-- `spesies`
-- `personality`
-- `__kekenyangan`
-- `__haus`
-- `__energi`
-- `__max_kekenyangan`
-- `__max_haus`
-- `__max_energi`
-- `__mood`
-- `__exp`
-- `__fase`
-- `penyakit`
-- `__total_main`
-- `__total_makan`
-- `__total_minum`
-- `__mengantuk`
+| Atribut | Keterangan |
+|---|---|
+| `__pet_id` | ID pet |
+| `pet_name` | Nama pet |
+| `spesies` | Jenis/spesies pet |
+| `personality` | Kepribadian pet |
+| `_kekenyangan` | Status kekenyangan |
+| `_haus` | Status haus |
+| `_energi` | Status energi |
+| `_max_kekenyangan` | Nilai maksimum kekenyangan |
+| `_max_haus` | Nilai maksimum haus |
+| `_max_energi` | Nilai maksimum energi |
+| `_mood` | Mood pet |
+| `_exp` | EXP pet |
+| `_fase` | Fase pet |
+| `penyakit` | Penyakit yang dimiliki pet |
+| `__total_makan` | Jumlah pet makan |
+| `__total_minum` | Jumlah pet minum |
+| `_mengantuk` | Status mengantuk |
+| `_list_makanan` | Daftar makanan yang dapat dimakan |
 
 ## Class Method
 
 ### `from_dict(cls, data)`
 
-Method ini digunakan untuk membuat object `Pet` berdasarkan data dalam dictionary.
+Membuat object `Pet` berdasarkan dictionary.
 
-Contoh:
+Contoh bentuk data:
 
 ```python
 data_pet = {
-    "pet_id": "PET003",
-    "pet_name": "Akai",
-    "spesies": "Panda",
-    "personality": "Ceria",
-    "max_kekenyangan": 80,
-    "max_haus": 80,
-    "max_energi": 100
+    "pet_id": "P001",
+    "pet_name": "Milo",
+    "spesies": "Cat",
+    "personality": "Active",
+    "max_kekenyangan": 100,
+    "max_haus": 100,
+    "max_energi": 100,
+    "list_makanan": ["Ikan", "Ayam"]
 }
 
-pet3 = Pet.from_dict(data_pet)
+pet = Pet.from_dict(data_pet)
 ```
-
-Method ini merupakan **class method** karena menggunakan `cls` dan membuat object dari class tersebut.
 
 ### `set_target_exp(cls, target_exp)`
 
-Digunakan untuk mengubah class attribute `TARGET_EXP`.
+Mengubah nilai class attribute `TARGET_EXP`.
 
 Contoh:
 
@@ -184,97 +289,154 @@ Contoh:
 Pet.set_target_exp(150)
 ```
 
-Setelah method dijalankan, nilai:
-
-```python
-Pet.TARGET_EXP
-```
-
-menjadi `150`.
-
-## Instance Method
-
-### `bermain()`
-
-Method ini digunakan untuk mensimulasikan pet bermain.
-
-Jika salah satu kebutuhan pet kurang dari 20, pet tidak dapat bermain.
-
-Jika kondisi mencukupi:
-
-1. Menampilkan animasi bermain.
-2. Energi berkurang 10.
-3. Haus berkurang 5.
-4. Kekenyangan berkurang 5.
-5. Mood bertambah 10, maksimal 100.
-6. EXP bertambah 25.
-7. Jumlah bermain bertambah 1.
-
-Program juga menggunakan:
-
-```python
-time.sleep(0.1)
-```
-
-dan:
-
-```python
-flush=True
-```
-
-agar animasi loading ditampilkan secara bertahap di terminal.
-
-### `tampilkan_data_pet()`
-
-Menampilkan informasi lengkap pet, termasuk status kebutuhan, mood, EXP, fase, dan penyakit.
-
 ## Static Method
 
 ### `validasi_nama_pet(nama)`
 
-Digunakan untuk mengecek apakah nama pet kosong atau tidak.
-
-Method ini tidak membutuhkan data object `Pet`, sehingga menggunakan `@staticmethod`.
-
-## Property dan Setter
-
-Class `Pet` memiliki property:
-
-- `kekenyangan`
-- `haus`
-- `energi`
-- `mood`
-- `exp`
-
-Setter melakukan validasi agar nilai tidak keluar dari batas yang telah ditentukan.
+Memeriksa apakah nama pet kosong.
 
 Contoh:
 
 ```python
-pet1.energi = 80
+Pet.validasi_nama_pet("Oyen")
 ```
 
-adalah data valid.
+menghasilkan:
 
-Sedangkan:
-
-```python
-pet1.energi = -10
+```text
+True
 ```
 
-atau:
+## Instance Method
 
-```python
-pet1.energi = 150
-```
+### `tampilkan_data_pet()`
 
-ditolak apabila melebihi batas maksimum energi pet.
+Menampilkan data pet, termasuk:
+
+- nama;
+- spesies;
+- personality;
+- kekenyangan;
+- haus;
+- energi;
+- mood;
+- EXP;
+- fase;
+- penyakit.
+
+### `makan(food)`
+
+Membuat pet memakan object `Food`.
+
+Method melakukan pengecekan:
+
+1. Pet tidak boleh sudah kenyang.
+2. Object yang diberikan harus merupakan `Food`.
+3. Nama makanan harus terdapat dalam `_list_makanan`.
+
+Jika berhasil, status pet dapat berubah berdasarkan efek makanan:
+
+- kekenyangan bertambah;
+- energi bertambah;
+- mood bertambah;
+- jumlah makan bertambah.
+
+### `minum(drink)`
+
+Membuat pet meminum object `Drink`.
+
+Object yang diberikan harus merupakan instance dari `Drink`.
 
 ---
 
-# 5. Class `Item`
+# 6. Class `Cat`
 
-Class `Item` digunakan untuk merepresentasikan item dalam game.
+`Cat` merupakan subclass dari `Pet`.
+
+Selain atribut yang diwarisi dari `Pet`, `Cat` memiliki:
+
+```python
+kebersihan
+__total_grooming
+```
+
+## `grooming()`
+
+Digunakan untuk melakukan grooming pada kucing.
+
+Jika kebersihan sudah `100`, grooming tidak dilakukan.
+
+Jika energi kurang dari `5`, grooming juga tidak dilakukan.
+
+Jika grooming berhasil:
+
+- kebersihan menjadi `100`;
+- energi berkurang `5`;
+- mood bertambah `10`;
+- EXP bertambah `25`;
+- jumlah grooming bertambah.
+
+---
+
+# 7. Class `Dog`
+
+`Dog` merupakan subclass dari `Pet`.
+
+Atribut tambahan:
+
+```python
+loyalitas
+__total_jalan_jalan
+```
+
+## `jalan_jalan()`
+
+Digunakan untuk mengajak anjing jalan-jalan.
+
+Pet harus memiliki kondisi yang mencukupi untuk melakukan aktivitas.
+
+Jika berhasil:
+
+- loyalitas bertambah `10`, maksimal `100`;
+- energi berkurang `20`;
+- haus berkurang `10`;
+- kekenyangan berkurang `10`;
+- mood bertambah `20`, maksimal `100`;
+- EXP bertambah `35`;
+- jumlah jalan-jalan bertambah.
+
+---
+
+# 8. Class `Panda`
+
+`Panda` merupakan subclass dari `Pet`.
+
+Atribut tambahan:
+
+```python
+ketenangan
+__total_meditasi
+```
+
+## `meditasi()`
+
+Digunakan untuk melakukan meditasi.
+
+Jika `ketenangan == 100`, meditasi tidak diperlukan.
+
+Jika meditasi dilakukan:
+
+- ketenangan menjadi `100`;
+- energi bertambah `10`;
+- mood bertambah `15`, maksimal `100`;
+- EXP bertambah `30`;
+- jumlah meditasi bertambah.
+
+---
+
+# 9. Class `Item`
+
+`Item` merupakan class dasar untuk berbagai item yang digunakan dalam game.
 
 ## Atribut
 
@@ -285,19 +447,7 @@ Class `Item` digunakan untuk merepresentasikan item dalam game.
 | `__price` | Harga item |
 | `__category` | Kategori item |
 
-## Property dan Setter
-
-### `item_id`
-
-Setter menolak ID item kosong.
-
-### `price`
-
-Setter menolak harga negatif.
-
-### `category`
-
-Setter hanya menerima tiga kategori:
+Kategori yang digunakan:
 
 ```text
 food
@@ -305,312 +455,669 @@ drink
 medicine
 ```
 
-Jika kategori lain diberikan, data akan ditolak.
+## `tampilkan_info_item()`
 
-### Instance Method
+Menampilkan informasi dasar item.
 
-#### `tampilkan_info_item()`
-
-Menampilkan ID, nama, harga, dan kategori item.
+Method ini kemudian dioverride oleh class `Food`, `Drink`, dan `Medicine`.
 
 ---
 
-# 6. Konsep OOP yang Diterapkan
+# 10. Class `Food`
 
-Program ini menerapkan beberapa konsep OOP berikut.
+`Food` merupakan subclass dari `Item`.
 
-## 6.1 Class dan Object
+Atribut tambahan:
 
-Class digunakan sebagai blueprint, sedangkan object merupakan instance dari class.
+```python
+pengurangan_lapar
+penambahan_energi
+peningkatan_mood
+```
+
+## `tampilkan_info_item()`
+
+Method ini melakukan **method overriding** terhadap method dengan nama yang sama pada `Item`.
+
+Informasi yang ditampilkan meliputi:
+
+- ID;
+- nama;
+- harga;
+- kategori;
+- efek pengurangan lapar;
+- efek penambahan energi;
+- efek peningkatan mood.
+
+---
+
+# 11. Class `Drink`
+
+`Drink` merupakan subclass dari `Item`.
+
+Atribut tambahan:
+
+```python
+pengurangan_haus
+```
+
+## `tampilkan_info_item()`
+
+Method ini melakukan overriding dan menampilkan:
+
+- ID;
+- nama;
+- harga;
+- kategori;
+- efek pengurangan haus.
+
+---
+
+# 12. Class `Medicine`
+
+`Medicine` merupakan subclass dari `Item`.
+
+Atribut tambahan:
+
+```python
+penambahan_energi
+peningkatan_mood
+target_penyakit
+```
+
+Pada implementasi class, target penyakit disimpan sebagai:
+
+```python
+target_id_penyakit
+```
+
+## `tampilkan_info_item()`
+
+Method ini melakukan overriding dan menampilkan:
+
+- ID;
+- nama;
+- harga;
+- kategori;
+- efek penambahan energi;
+- efek peningkatan mood;
+- target penyakit.
+
+---
+
+# 13. Class `Disease`
+
+`Disease` digunakan untuk merepresentasikan penyakit yang dapat dimiliki pet.
+
+## Atribut
+
+| Atribut | Keterangan |
+|---|---|
+| `__disease_id` | ID penyakit |
+| `name` | Nama penyakit |
+| `deskripsi` | Deskripsi penyakit |
+
+## `tampilkan_info_penyakit()`
+
+Menampilkan informasi penyakit.
 
 Contoh:
 
 ```python
-player1 = Player("P001", "Rafi", "password123")
-pet1 = Pet("PET001", "Milo", "Kucing", "Aktif", 80, 100, 120)
-item1 = Item("I001", "Makanan Kucing", 5000, "food")
+penyakit1 = Disease(
+    "P001",
+    "Flu",
+    "Penyakit yang menyebabkan demam dan batuk"
+)
+
+penyakit1.tampilkan_info_penyakit()
 ```
 
-## 6.2 Encapsulation
+Pada `posttest2` saat ini, object `Disease` baru digunakan untuk menampilkan informasi dan belum dihubungkan dengan mekanisme pengobatan pet.
 
-Beberapa atribut dibuat private menggunakan awalan `__`, misalnya:
+---
+
+# 14. Class `Shop`
+
+`Shop` digunakan sebagai tempat penyimpanan item yang dapat dibeli oleh player.
+
+## Atribut
+
+Shop memiliki daftar item berdasarkan kategori:
+
+```python
+{
+    "food": [],
+    "drink": [],
+    "medicine": []
+}
+```
+
+## `tambah_item_ke_shop(item)`
+
+Menambahkan object `Item` ke daftar item Shop berdasarkan kategorinya.
+
+Method memvalidasi object menggunakan:
+
+```python
+isinstance(item, Item)
+```
+
+## `beli_item(player, item, jumlah)`
+
+Digunakan untuk membeli item.
+
+Parameter:
+
+- `player` → object `Player` yang melakukan pembelian;
+- `item` → object item yang ingin dibeli;
+- `jumlah` → jumlah item yang dibeli.
+
+Alur pembelian:
+
+```text
+Player memilih item
+        ↓
+Shop mengecek item
+        ↓
+Menghitung total harga
+        ↓
+Mengecek Pet Coins
+        ↓
+Pet Coins dikurangi
+        ↓
+Item dimasukkan ke inventory Player
+        ↓
+Object Transaksi dibuat
+        ↓
+Informasi transaksi ditampilkan
+```
+
+Pembelian hanya berhasil apabila Pet Coins player mencukupi.
+
+---
+
+# 15. Class `Transaksi`
+
+`Transaksi` merupakan class yang digunakan untuk menyimpan detail pembelian.
+
+Atribut:
+
+| Atribut | Keterangan |
+|---|---|
+| `item_dibeli` | Object item yang dibeli |
+| `harga_item` | Harga satu item |
+| `jumlah_dibeli` | Jumlah item |
+| `total_harga` | Total harga pembelian |
+
+## `tampilkan_info_transaksi()`
+
+Menampilkan:
+
+- item yang dibeli;
+- harga item;
+- jumlah;
+- total harga.
+
+Object `Transaksi` dibuat di dalam method `Shop.beli_item()` ketika pembelian berhasil.
+
+---
+
+# 16. Konsep OOP yang Diterapkan
+
+## 16.1 Class dan Object
+
+Class digunakan sebagai blueprint untuk membuat object.
+
+Contoh:
+
+```python
+player = Player("P001", "Raafx", "r1234")
+```
+
+```python
+ikan = Food(
+    "F001",
+    "Ikan",
+    10000,
+    "food",
+    20,
+    15,
+    10
+)
+```
+
+---
+
+## 16.2 Encapsulation
+
+Program menggunakan atribut private dengan awalan `__`.
+
+Contoh:
 
 ```python
 self.__password
 self.__pet_coins
-self.__energi
+self.__pet_id
 self.__price
 ```
 
-Akses terhadap data tersebut dilakukan melalui property dan setter.
+Akses terhadap beberapa atribut dilakukan melalui property.
 
-## 6.3 Getter dan Setter
+---
 
-Getter digunakan untuk mengambil nilai:
+## 16.3 Inheritance
 
-```python
-print(pet1.energi)
-```
-
-Setter digunakan untuk mengubah nilai sekaligus melakukan validasi:
-
-```python
-pet1.energi = 80
-```
-
-## 6.4 Instance Method
-
-Instance method menggunakan `self` dan bekerja terhadap object tertentu.
+Class turunan memperoleh atribut dan method dari class induknya.
 
 Contoh:
 
 ```python
-pet1.bermain()
+class Cat(Pet):
 ```
 
-## 6.5 Class Method
+dan:
 
-Class method menggunakan `@classmethod` dan menerima parameter `cls`.
+```python
+class Food(Item):
+```
+
+---
+
+## 16.4 `super()`
+
+Constructor class turunan memanggil constructor class induk menggunakan:
+
+```python
+super().__init__(...)
+```
+
+Hal ini membuat atribut dasar dari `Pet` atau `Item` tetap dapat digunakan oleh class turunannya.
+
+---
+
+## 16.5 Method Overriding
+
+Class `Food`, `Drink`, dan `Medicine` memiliki method:
+
+```python
+tampilkan_info_item()
+```
+
+yang menggantikan implementasi method dengan nama sama pada class `Item`.
+
+Dengan demikian, masing-masing jenis item dapat menampilkan informasi khusus sesuai atributnya.
+
+---
+
+## 16.6 Polymorphism melalui `isinstance()`
+
+Program menggunakan `isinstance()` untuk mengenali tipe object.
+
+Contoh pada `Player.tambah_item()`:
+
+```python
+if isinstance(item, Food):
+    ...
+elif isinstance(item, Drink):
+    ...
+elif isinstance(item, Medicine):
+    ...
+```
+
+Hal serupa digunakan untuk mengenali jenis pet.
+
+---
+
+## 16.7 Property, Getter, dan Setter
+
+Beberapa atribut memiliki property dan setter untuk mengatur akses sekaligus melakukan validasi.
 
 Contoh:
 
 ```python
-Pet.from_dict(data_pet)
+pet.energi
+```
+
+dan:
+
+```python
+pet.energi = 80
+```
+
+Setter digunakan untuk memastikan nilai berada pada batas yang ditentukan.
+
+---
+
+## 16.8 Static Method
+
+Contoh:
+
+```python
+Player.validasi_username("Raafx")
+```
+
+dan:
+
+```python
+Pet.validasi_nama_pet("Oyen")
+```
+
+Method tersebut tidak bergantung pada data object tertentu.
+
+---
+
+## 16.9 Class Method
+
+Contoh:
+
+```python
+Pet.from_dict(data)
+```
+
+dan:
+
+```python
 Pet.set_target_exp(150)
 ```
 
-## 6.6 Static Method
+Class method menggunakan `cls` untuk bekerja pada level class.
 
-Static method tidak menggunakan `self` maupun `cls`.
+---
+
+# 17. Relasi Antar-Class
+
+Program `posttest2` menerapkan beberapa jenis hubungan antar-object.
+
+## 17.1 Agregasi — Player dan Pet
+
+Player memiliki daftar pet:
+
+```python
+self.__list_of_pet = []
+```
+
+Pet dibuat kemudian dimasukkan ke daftar milik Player.
+
+Pada `main.py`:
+
+```python
+player.buat_pet(...)
+```
+
+Object pet kemudian disimpan pada:
+
+```python
+player.list_of_pet
+```
+
+Pet dapat dianggap sebagai object yang berada di dalam kumpulan Player.
+
+---
+
+## 17.2 Agregasi — Shop dan Item
+
+Shop memiliki daftar item:
+
+```python
+self.__daftar_item = {
+    "food": [],
+    "drink": [],
+    "medicine": []
+}
+```
+
+Item dibuat di luar Shop, kemudian dimasukkan menggunakan:
+
+```python
+shop.tambah_item_ke_shop(item)
+```
 
 Contoh:
 
 ```python
-Player.validasi_username("Rafi")
-Pet.validasi_nama_pet("Milo")
+shop.tambah_item_ke_shop(ikan)
+shop.tambah_item_ke_shop(ayam)
+shop.tambah_item_ke_shop(air)
 ```
 
-Method tersebut hanya melakukan proses validasi yang tidak bergantung pada data object tertentu.
+---
 
-## 6.7 Validasi Data
+## 17.3 Asosiasi — Shop dan Player
 
-Setter digunakan untuk mencegah data yang tidak valid masuk ke object.
+Method:
+
+```python
+shop.beli_item(player, item, jumlah)
+```
+
+menerima object `Player` sebagai parameter.
+
+Artinya Shop berinteraksi dengan Player ketika proses pembelian berlangsung.
+
+---
+
+## 17.4 Asosiasi — Pet dan Item
+
+Pet berinteraksi dengan item ketika menjalankan:
+
+```python
+oyen.makan(ikan)
+```
+
+atau:
+
+```python
+oyen.minum(air)
+```
+
+Object item diberikan sebagai parameter kepada method Pet.
+
+---
+
+## 17.5 Komposisi — Shop dan Transaksi
+
+Pada saat pembelian berhasil, object `Transaksi` dibuat di dalam method:
+
+```python
+Shop.beli_item()
+```
 
 Contohnya:
 
-- koin tidak boleh negatif;
-- energi tidak boleh negatif atau melebihi maksimum;
-- mood harus berada pada rentang 0–100;
-- harga tidak boleh negatif;
-- kategori item harus sesuai pilihan yang tersedia.
+```python
+transaksi = Transaksi(
+    item,
+    item.price,
+    jumlah,
+    total_harga
+)
+```
+
+Object `Transaksi` hanya dibuat sebagai bagian dari proses pembelian dan tidak disimpan sebagai bagian permanen dari Shop.
 
 ---
 
-# 7. Panduan Menjalankan Program
+# 18. Alur Program `main.py`
 
-Pastikan Python sudah terinstall.
+Secara umum, pengujian pada `main.py` berjalan seperti berikut:
 
-Buka terminal pada folder project, kemudian jalankan file utama:
+```text
+Membuat Player
+      ↓
+Membuat Pet melalui Player.buat_pet()
+      ↓
+Mengambil object Cat, Dog, dan Panda
+      ↓
+Menjalankan method khusus masing-masing pet
+      ↓
+Membuat object Food dan Drink
+      ↓
+Membuat object Shop
+      ↓
+Menambahkan item ke Shop
+      ↓
+Mengisi Pet Coins
+      ↓
+Membeli item
+      ↓
+Item masuk ke inventory Player
+      ↓
+Pet menggunakan item
+      ↓
+Menampilkan informasi item
+      ↓
+Membuat object Disease
+      ↓
+Menampilkan informasi penyakit
+```
+
+---
+
+# 19. Contoh Penggunaan
+
+## Membuat Player
+
+```python
+player = Player("P001", "Raafx", "r1234")
+```
+
+## Membuat Pet melalui Player
+
+```python
+player.buat_pet(
+    "C001",
+    "Oyen",
+    "Cat",
+    "Active",
+    100,
+    100,
+    100,
+    ["Ikan", "Ayam", "Whiskas"]
+)
+```
+
+## Mengambil Pet
+
+```python
+oyen = player.list_of_pet[0]
+```
+
+## Menjalankan aktivitas khusus
+
+```python
+oyen.kebersihan = 50
+oyen.grooming()
+```
+
+## Membuat Item
+
+```python
+ikan = Food(
+    "F001",
+    "Ikan",
+    10000,
+    "food",
+    20,
+    15,
+    10
+)
+```
+
+## Membuat Shop
+
+```python
+shop = Shop()
+shop.tambah_item_ke_shop(ikan)
+```
+
+## Membeli Item
+
+```python
+player.pet_coins = 100000
+shop.beli_item(player, ikan, 2)
+```
+
+## Menggunakan Item
+
+```python
+oyen.kekenyangan = 50
+oyen.makan(ikan)
+```
+
+---
+
+# 20. Cara Menjalankan Program
+
+Masuk ke folder `posttest2`:
 
 ```bash
-python Main.py
+cd posttest2
 ```
 
-Jika nama file utama berbeda, sesuaikan dengan nama file tersebut.
+Kemudian jalankan:
 
-Pastikan `Class_Utama.py` berada di folder yang sama dengan file utama karena program menggunakan:
-
-```python
-from Class_Utama import Player, Pet, Item
+```bash
+python main.py
 ```
 
----
-
-# 8. Panduan Pengujian
-
-Bagian testing pada program dibagi menjadi beberapa tahap.
-
-## 8.1 Pengujian Pembuatan Object
-
-Program membuat minimal dua object dari setiap class:
-
-### Player
-
-```python
-player1 = Player("P001", "Rafi", "password123")
-player2 = Player("P002", "Ahmad", "rahasia123")
-```
-
-### Pet
-
-```python
-pet1 = Pet(...)
-pet2 = Pet(...)
-```
-
-### Item
-
-```python
-item1 = Item(...)
-item2 = Item(...)
-```
-
-Tujuannya untuk menunjukkan bahwa satu class dapat digunakan untuk membuat beberapa object dengan data yang berbeda.
-
----
-
-## 8.2 Pengujian Instance Method
-
-Program menjalankan:
-
-```python
-player1.tampilkan_data_user()
-pet1.tampilkan_data_pet()
-item1.tampilkan_info_item()
-item2.tampilkan_info_item()
-pet1.bermain()
-```
-
-Perhatikan perubahan status `pet1` setelah menjalankan `bermain()`.
-
-Energi, haus, dan kekenyangan akan berkurang, sedangkan mood dan EXP akan bertambah.
-
----
-
-## 8.3 Pengujian Class Method
-
-Program menguji:
-
-```python
-pet3 = Pet.from_dict(data_pet)
-```
-
-Kemudian mengubah target EXP:
-
-```python
-print("Target EXP sebelum diubah:", Pet.TARGET_EXP)
-Pet.set_target_exp(150)
-print("Target EXP setelah diubah:", Pet.TARGET_EXP)
-```
-
-Output menunjukkan perubahan nilai `TARGET_EXP` dari `100` menjadi `150`.
-
----
-
-## 8.4 Pengujian Static Method
-
-Username valid:
-
-```python
-Player.validasi_username("Rafi")
-```
-
-Hasil:
+Pastikan ketiga file module berada pada folder yang sama:
 
 ```text
-True
+Class_Utama.py
+Class_Turunan_Pet.py
+Class_Turunan_Item.py
+main.py
 ```
 
-Username kosong:
+Program menggunakan import antar-file seperti:
 
 ```python
-Player.validasi_username("")
+from Class_Utama import Pet
 ```
 
-Hasil:
-
-```text
-False
-```
-
-Hal yang sama dilakukan pada validasi nama pet.
-
----
-
-## 8.5 Pengujian Setter Valid
-
-Contoh data valid:
+dan:
 
 ```python
-player1.pet_coins = 100
-pet1.energi = 80
-pet1.mood = 90
-item1.price = 6000
-item1.category = "medicine"
-```
-
-Program kemudian menampilkan nilai yang berhasil disimpan.
-
----
-
-## 8.6 Pengujian Setter Tidak Valid
-
-Program juga memasukkan beberapa data yang tidak valid:
-
-```python
-player1.user_id = ""
-player1.password = ""
-player1.pet_coins = -100
-
-pet1.energi = -10
-pet1.energi = 150
-
-pet1.mood = -10
-pet1.mood = 150
-
-item1.item_id = ""
-item1.price = -5000
-item1.category = "senjata"
-```
-
-Program seharusnya menampilkan pesan error tanpa mengganti nilai sebelumnya.
-
-Contoh:
-
-```text
-Jumlah koin tidak boleh negatif!
-Jumlah energi tidak boleh negatif atau melebihi maksimum!
-Harga tidak boleh negatif!
-Kategori tidak valid! Harus 'food', 'drink', atau 'medicine'.
+from Class_Turunan_Item import Drink, Food
 ```
 
 ---
 
-# 9. Ringkasan Pengujian
+# 21. Catatan Implementasi Posttest 2
 
-| Fitur | Pengujian | Hasil yang Diharapkan |
-|---|---|---|
-| Object `Player` | Membuat `player1` dan `player2` | Object berhasil dibuat |
-| Object `Pet` | Membuat `pet1` dan `pet2` | Object berhasil dibuat |
-| Object `Item` | Membuat `item1` dan `item2` | Object berhasil dibuat |
-| Instance method | `bermain()` | Status pet berubah |
-| Instance method | Method tampil data | Data ditampilkan |
-| Class method | `from_dict()` | Object `Pet` berhasil dibuat dari dictionary |
-| Class method | `set_target_exp()` | `TARGET_EXP` berubah |
-| Static method | Validasi username | Menghasilkan `True`/`False` |
-| Static method | Validasi nama pet | Menghasilkan `True`/`False` |
-| Setter valid | Nilai dalam batas | Nilai diterima |
-| Setter invalid | Nilai di luar batas | Nilai ditolak dan pesan error ditampilkan |
+Versi `posttest2` saat ini berfokus pada penerapan konsep OOP dan hubungan antar-class.
+
+Beberapa fitur sudah tersedia tetapi belum digunakan secara penuh dalam gameplay, misalnya:
+
+- `Medicine` sudah dibuat sebagai subclass `Item`, tetapi belum digunakan pada proses pengobatan pet.
+- `Disease` sudah dapat dibuat dan ditampilkan, tetapi belum dihubungkan dengan sistem penyakit pet.
+- atribut penghitung seperti `__total_grooming`, `__total_jalan_jalan`, dan `__total_meditasi` masih disimpan secara internal dan belum memiliki method tampilan khusus.
+- `main.py` berfungsi sebagai program pengujian/demo, bukan loop gameplay interaktif penuh.
 
 ---
 
-# 10. Kesimpulan
+# 22. Ringkasan Konsep OOP
 
-Program **GrowPets** merupakan implementasi sederhana OOP menggunakan Python dengan tiga class utama, yaitu `Player`, `Pet`, dan `Item`.
+| Konsep | Implementasi |
+|---|---|
+| Class & Object | `Player`, `Pet`, `Item`, `Cat`, `Dog`, `Panda`, dll. |
+| Encapsulation | Atribut private dengan `__` |
+| Property | `user_id`, `password`, `pet_coins`, `kekenyangan`, `haus`, `energi`, `mood`, `exp`, dll. |
+| Inheritance | `Cat/Dog/Panda → Pet`, `Food/Drink/Medicine → Item` |
+| `super()` | Constructor class turunan |
+| Method Overriding | `tampilkan_info_item()` pada subclass Item |
+| Static Method | `validasi_username()`, `validasi_nama_pet()` |
+| Class Method | `from_dict()`, `set_target_exp()` |
+| Polymorphism / Type Dispatch | `isinstance()` |
+| Aggregation | `Player → Pet`, `Shop → Item` |
+| Association | `Shop ↔ Player`, `Pet ↔ Item` |
+| Composition | `Shop → Transaksi` |
 
-Program telah menerapkan:
+---
 
-- class dan object;
-- instance attribute;
-- class attribute;
-- private attribute;
-- instance method;
-- class method;
-- static method;
-- getter menggunakan `@property`;
-- setter menggunakan `@property.setter`;
-- validasi data pada setter;
-- pembuatan object dari dictionary;
-- pengujian data valid dan tidak valid.
+## 23. Penutup
 
-Dengan struktur tersebut, program tidak hanya menjalankan simulasi pet sederhana, tetapi juga menunjukkan penerapan beberapa konsep dasar OOP Python dalam satu program.
+`GrowPets Posttest 2` merupakan pengembangan program simulasi pet yang digunakan untuk menerapkan berbagai konsep dasar hingga menengah dalam **Object-Oriented Programming menggunakan Python**.
+
+Program tidak hanya menggunakan class dan object, tetapi juga menunjukkan bagaimana beberapa object dapat saling berinteraksi melalui inheritance, overriding, validasi tipe, property, serta hubungan agregasi, asosiasi, dan komposisi.
