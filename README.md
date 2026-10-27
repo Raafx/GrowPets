@@ -4,7 +4,7 @@ GrowPets adalah program berbasis Python bertema simulasi perawatan hewan pelihar
 
 ## Class Diagram
 
-![Class Diagram GrowPets](docs/diagram.jpeg)
+![Class Diagram GrowPets](posttest3/docs/diagram.jpeg)
 
 ### Penjelasan Relasi
 
@@ -46,14 +46,14 @@ Dengan polimorfisme, method yang dipanggil dapat memiliki perilaku berbeda berga
 
 
 <!-- Ganti path di bawah ini setelah screenshot ditambahkan. -->
-![Output utama program](screenshots/ss1.jpeg)
-![Output utama program](screenshots/ss2.jpeg)
-![Output utama program](screenshots/ss3.jpeg)
-![Output utama program](screenshots/ss4.jpeg)
-![Output utama program](screenshots/ss5.jpeg)
-![Output utama program](screenshots/ss6.jpeg)
-![Output utama program](screenshots/ss7.jpeg)
-![Output utama program](screenshots/ss8.jpeg)
-![Output utama program](screenshots/ss9.jpeg)
+![Output utama program](posttest3/screenshots/ss1.jpeg)
+![Output utama program](posttest3/screenshots/ss2.jpeg)
+![Output utama program](posttest3/screenshots/ss3.jpeg)
+![Output utama program](posttest3/screenshots/ss4.jpeg)
+![Output utama program](posttest3/screenshots/ss5.jpeg)
+![Output utama program](posttest3/screenshots/ss6.jpeg)
+![Output utama program](posttest3/screenshots/ss7.jpeg)
+![Output utama program](posttest3/screenshots/ss8.jpeg)
+![Output utama program](posttest3/screenshots/ss9.jpeg)
 
 
